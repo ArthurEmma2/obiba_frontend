@@ -9,18 +9,23 @@ import { Notice } from '@/components/ui/notice';
 import { authErrorCode, messageFor } from '@/lib/errors';
 import { savePendingProfile } from '@/lib/pending-profile';
 import { normalizeGhanaPhone } from '@/lib/phone';
+import { webConfig } from '@/lib/config';
 import { useServices } from '@/lib/services';
 import { t } from '@/lib/strings';
 import { validDisplayName, validEmail } from '@/lib/validation';
 import { AuthHeading } from './auth-shell';
 import { GoogleButton, OrDivider } from './google-button';
 import { PasswordGuidance, usePasswordCheck } from './password-guidance';
+import { Turnstile } from './turnstile';
 import { useSignedInRedirect } from './use-signed-in-redirect';
 
 type Errors = Partial<Record<'name' | 'phone' | 'email' | 'password', string>>;
 
 export function SignUpForm() {
-  const { auth, siteUrl } = useServices();
+  const { auth, api, siteUrl } = useServices();
+  const { turnstileSiteKey } = webConfig();
+  const [humanToken, setHumanToken] = useState<string | null>(null);
+  const [humanReset, setHumanReset] = useState(0);
   const router = useRouter();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -55,15 +60,30 @@ export function SignUpForm() {
     setErrors(next);
     setFormError(null);
     if (Object.keys(next).length) return;
+    if (turnstileSiteKey && !humanToken) {
+      setFormError(t.signUp.humanCheckNeeded);
+      return;
+    }
     inFlight.current = true;
     setBusy(true);
     try {
       const e164 = normalizeGhanaPhone(phone)!;
       savePendingProfile(email, { displayName: name.trim(), phone: e164 });
+      if (turnstileSiteKey) {
+        await api.request('CreateAccount', { input: { email: email.trim(), password, displayName: name.trim(), turnstileToken: humanToken! } });
+        await auth.signIn(email.trim(), password);
+        // A full load drops the Cloudflare script before the Recovery Kit screens.
+        window.location.assign('/onboarding');
+        return;
+      }
       await auth.signUp({ email: email.trim(), password, displayName: name.trim() });
       setPassword('');
       router.replace('/onboarding');
     } catch (err) {
+      if (turnstileSiteKey) {
+        setHumanToken(null);
+        setHumanReset((n) => n + 1);
+      }
       const code = authErrorCode(err);
       if (code === 'auth/weak-password' || code === 'auth/password-does-not-meet-requirements') setErrors({ password: messageFor(err) });
       else if (code === 'auth/invalid-email') setErrors({ email: messageFor(err) });
@@ -159,6 +179,7 @@ export function SignUpForm() {
             </div>
           )}
         </Field>
+        {turnstileSiteKey ? <Turnstile siteKey={turnstileSiteKey} action="sign_up" resetSignal={humanReset} onToken={setHumanToken} /> : null}
         <Button type="submit" block loading={busy} loadingLabel={t.common.working} className="mt-1">
           {t.signUp.submit}
         </Button>

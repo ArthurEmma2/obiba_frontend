@@ -82,6 +82,8 @@ export const t = {
     agree: 'By creating an account you agree to the',
     and: 'and',
     notCreated: 'We could not create an account with these details. If you already have one, sign in or reset your password.',
+    humanCheckNeeded: 'Complete the security check above, then try again.',
+    humanCheckUnavailable: 'The security check could not load. Check your connection or turn off blockers for this site, then refresh the page.',
     passwordRules: 'Password requirements',
   },
   password: {
@@ -1161,6 +1163,8 @@ export const t = {
     authNetwork: 'We could not reach the sign-in service. Check your connection.',
     authDisabled: 'This account has been disabled. Contact support.',
     authRecaptcha: 'We could not confirm this request is from a person. Refresh the page and try again.',
+    HUMAN_CHECK_FAILED: 'We could not confirm this request is from a person. Complete the security check again.',
+    SIGN_UP_REFUSED: 'We could not create an account with these details. If you already have one, sign in or reset your password.',
     authWeakPassword: 'Choose a stronger password that meets every requirement.',
     authEmailInvalid: 'Enter a valid email address.',
     authRecentLogin: 'For your security, sign in again to continue.',

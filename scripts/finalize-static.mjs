@@ -30,12 +30,12 @@ function contentSecurityPolicy(hashes) {
   const walletFrames = wallets ? ['https://my.herewallet.app', 'https://wallet.intear.tech'] : [];
   return [
     "default-src 'self'",
-    `script-src 'self' ${hashes.join(' ')} https://apis.google.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/`,
+    `script-src 'self' ${hashes.join(' ')} https://challenges.cloudflare.com https://apis.google.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob:",
     "font-src 'self'",
     `connect-src 'self' ${[api, ...google, nearRpc, ...walletConnect].filter(Boolean).join(' ')}`,
-    `frame-src ${[authDomain, 'https://www.google.com/recaptcha/', 'https://recaptcha.google.com/recaptcha/', ...walletFrames].filter(Boolean).join(' ')}`,
+    `frame-src ${[authDomain, 'https://challenges.cloudflare.com', 'https://www.google.com/recaptcha/', 'https://recaptcha.google.com/recaptcha/', ...walletFrames].filter(Boolean).join(' ')}`,
     "worker-src 'self'",
     "manifest-src 'self'",
     "object-src 'none'",

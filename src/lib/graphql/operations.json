@@ -2,6 +2,7 @@
   "Me": "query Me { me { uid displayName phone email handle accountName viewOnly pilotAllowed merchant accountId accountStatus } }",
   "SetupStatus": "query SetupStatus { devices { publicKey status initial createdAt } recoveryKit { active publicKey createdAt } }",
   "AccountNameAvailability": "query AccountNameAvailability($name: String!) { accountNameAvailability(name: $name) { name accountId available reason suggestions } }",
+  "CreateAccount": "mutation CreateAccount($input: CreateAccountInput!) { createAccount(input: $input) }",
   "RegisterProfile": "mutation RegisterProfile($input: RegisterProfileInput!) { registerProfile(input: $input) { uid displayName phone email handle accountName viewOnly pilotAllowed merchant accountId accountStatus } }",
   "RegisterDevice": "mutation RegisterDevice($publicKey: String!) { registerDevice(publicKey: $publicKey) { publicKey status provisioningQueued } }",
   "RegisterRecoveryKit": "mutation RegisterRecoveryKit($kitPublicKey: String!, $devicePublicKey: String!, $deviceSignature: String!) { registerRecoveryKit(kitPublicKey: $kitPublicKey, devicePublicKey: $devicePublicKey, deviceSignature: $deviceSignature) { active publicKey createdAt } }",

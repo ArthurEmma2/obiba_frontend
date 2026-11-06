@@ -47,6 +47,13 @@ export interface AccountEvent {
   status: string;
 }
 
+export interface CreateAccountInput {
+  email: string;
+  password: string;
+  displayName: string;
+  turnstileToken: string;
+}
+
 export interface RegisterProfileInput {
   displayName: string;
   phone: string;
@@ -474,6 +481,7 @@ export interface OperationResults {
   Me: { me: Me };
   SetupStatus: { devices: DeviceView[]; recoveryKit: RecoveryKitStatus };
   AccountNameAvailability: { accountNameAvailability: AccountNameAvailability };
+  CreateAccount: { createAccount: boolean };
   RegisterProfile: { registerProfile: Me };
   RegisterDevice: { registerDevice: DeviceResult };
   RegisterRecoveryKit: { registerRecoveryKit: RecoveryKitStatus };
@@ -545,6 +553,7 @@ export interface OperationVariables {
   Me: undefined;
   SetupStatus: undefined;
   AccountNameAvailability: { name: string };
+  CreateAccount: { input: CreateAccountInput };
   RegisterProfile: { input: RegisterProfileInput };
   RegisterDevice: { publicKey: string };
   RegisterRecoveryKit: { kitPublicKey: string; devicePublicKey: string; deviceSignature: string };

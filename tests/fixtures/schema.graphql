@@ -69,6 +69,13 @@ type CancelRecoveryCall {
   methodName: String!
 }
 
+input CreateAccountInput {
+  displayName: String!
+  email: String!
+  password: String!
+  turnstileToken: String!
+}
+
 input CreateInvoiceInput {
   amount: String!
   expiresInMinutes: Int!
@@ -207,6 +214,7 @@ type Mutation {
   cancelSupportRecovery: SupportCaseView!
   confirmPhone: Boolean!
   confirmSupportRecovery(newPublicKey: String!, token: String!): SupportRequestReceipt!
+  createAccount(input: CreateAccountInput!): Boolean!
   createInvoice(input: CreateInvoiceInput!): CreatedInvoice!
   markNotificationsRead(upToId: String!): Int!
   openSupportRecovery(newPublicKey: String!): SupportCaseView!
