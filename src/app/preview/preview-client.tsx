@@ -1,5 +1,6 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 import { AccountView } from '@/features/account/account-view';
 import { OnboardingFlow } from '@/features/onboarding/onboarding-flow';
@@ -134,4 +135,8 @@ export function PreviewClient({ scenario }: { scenario: string | null }) {
   const s = scenarioOf(scenario);
   const services = useMemo(() => (walkthrough ? buildWalkthrough() : build(s)), [walkthrough, s]);
   return <ServicesProvider services={services}>{!walkthrough && s === 'account' ? <AccountView /> : <OnboardingFlow accountHref="/preview?step=account" />}</ServicesProvider>;
+}
+
+export function PreviewRoute() {
+  return <PreviewClient scenario={useSearchParams().get('step')} />;
 }

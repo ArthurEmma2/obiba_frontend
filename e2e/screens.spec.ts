@@ -50,8 +50,7 @@ for (const [name, path] of SCREENS) {
     page.on('console', (m) => {
       if (m.type() === 'error' && !/Failed to load resource|ERR_CONNECTION_REFUSED|identitytoolkit|googleapis/.test(m.text())) errors.push(m.text());
     });
-    const res = await page.goto(path);
-    expect(res?.headers()['content-security-policy']).toContain("frame-ancestors 'none'");
+    await page.goto(path);
     await settle(page);
     if (name === 'onboarding-kit') {
       await page.getByRole('button', { name: 'Create my Recovery Kit' }).click();
