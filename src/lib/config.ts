@@ -18,6 +18,7 @@ export interface WebConfig {
   nearRpcUrl: string | null;
   skipOtp: boolean;
   turnstileSiteKey: string | null;
+  uiPreview: boolean;
 }
 
 let cached: WebConfig | null = null;
@@ -46,6 +47,7 @@ export function webConfig(): WebConfig {
     payContract: read('NEXT_PUBLIC_PAY_CONTRACT', process.env.NEXT_PUBLIC_PAY_CONTRACT),
     skipOtp: process.env.NEXT_PUBLIC_SKIP_OTP === '1',
     turnstileSiteKey: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || null,
+    uiPreview: process.env.NEXT_PUBLIC_UI_PREVIEW === '1',
     nearRpcUrl: process.env.NEXT_PUBLIC_NEAR_RPC_URL || (network === 'mainnet' ? 'https://free.rpc.fastnear.com' : network === 'testnet' ? 'https://test.rpc.fastnear.com' : null),
   };
   if (cached.skipOtp && network === 'mainnet') throw new Error('NEXT_PUBLIC_SKIP_OTP is not allowed on mainnet');

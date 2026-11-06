@@ -1,5 +1,6 @@
 'use client';
 
+import { withBase } from '@/lib/base-path';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useId, useRef, useState, type FormEvent } from 'react';
@@ -73,7 +74,7 @@ export function SignUpForm() {
         await api.request('CreateAccount', { input: { email: email.trim(), password, displayName: name.trim(), turnstileToken: humanToken! } });
         await auth.signIn(email.trim(), password);
         // A full load drops the Cloudflare script before the Recovery Kit screens.
-        window.location.assign('/onboarding');
+        window.location.assign(withBase('/onboarding'));
         return;
       }
       await auth.signUp({ email: email.trim(), password, displayName: name.trim() });

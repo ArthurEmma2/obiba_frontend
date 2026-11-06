@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { Logo } from '@/components/ui/logo';
+import { webConfig } from '@/lib/config';
 import { useServices } from '@/lib/services';
 import { t } from '@/lib/strings';
 import { PhotoCarousel } from './photo-carousel';
@@ -22,7 +23,10 @@ export function AuthShell({ children, start = 0 }: { children: ReactNode; start?
         </div>
 
         <main className="flex flex-1 flex-col justify-center py-8 lg:py-12">
-          <div className="mx-auto w-full max-w-[400px] animate-rise">{children}</div>
+          <div className="mx-auto w-full max-w-[400px] animate-rise">
+            {webConfig().uiPreview ? <p className="mb-6 rounded-[8px] border border-line bg-canvas px-3.5 py-2.5 text-[13px] leading-5 text-ink-2">{t.uiPreview}</p> : null}
+            {children}
+          </div>
         </main>
 
         <footer className="flex shrink-0 flex-wrap items-center gap-x-5 gap-y-1 py-6 text-[13px] text-muted">

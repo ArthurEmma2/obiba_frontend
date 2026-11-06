@@ -1,5 +1,6 @@
 'use client';
 
+import { withBase } from '@/lib/base-path';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -33,7 +34,7 @@ export function SendHub() {
       <DestinationList
         label={t.send.hubLabel}
         items={[
-          { href: '/send/obiba', logos: <img src="/logos/obiba-mark.png" alt="" aria-hidden="true" width={29} height={29} className="h-[29px] w-[29px] shrink-0" />, title: t.send.toObiba, body: t.send.toObibaBody, meta: t.send.toObibaMeta, disabled: viewOnly },
+          { href: '/send/obiba', logos: <img src={withBase('/logos/obiba-mark.png')} alt="" aria-hidden="true" width={29} height={29} className="h-[29px] w-[29px] shrink-0" />, title: t.send.toObiba, body: t.send.toObibaBody, meta: t.send.toObibaMeta, disabled: viewOnly },
           { href: '/send/external', logos: <span className="flex items-center gap-1.5"><Flag country="GH" size={29} /><ProviderLogos ids={['MTN', 'TELECEL']} size={29} /></span>, title: t.remit.hubTitle, body: t.remit.hubBody, disabled: viewOnly },
           { href: '/send/near', logos: <NetworkLogo network="near" size={29} />, title: t.send.toNear, body: t.send.toNearBody, meta: t.send.toNearMeta, disabled: viewOnly },
         ]}

@@ -1,4 +1,5 @@
 import { useSearchParams } from 'next/navigation';
+import { BASE_PATH } from './base-path';
 
 const withId = (path: string, id: string) => `${path}?id=${encodeURIComponent(id)}`;
 
@@ -16,7 +17,8 @@ export function useQueryId(): string {
 
 // The API and worker send path-style links (/pay/<id>, /activity/<id>), which a static host answers with 404.html.
 export function canonicalRoute(pathname: string, search: string): string | null {
-  const path = pathname.replace(/\/$/, '');
+  const inApp = BASE_PATH && pathname.startsWith(BASE_PATH) ? pathname.slice(BASE_PATH.length) : pathname;
+  const path = inApp.replace(/\/$/, '');
   const invoice = /^\/pay\/([0-9a-f]{32})$/.exec(path);
   if (invoice) return routes.invoice(invoice[1]!, new URLSearchParams(search).get('payment') ?? undefined);
   const receipt = /^\/activity\/([^/]+)\/receipt$/.exec(path);

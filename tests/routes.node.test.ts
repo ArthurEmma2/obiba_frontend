@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { canonicalRoute, routes } from '@/lib/routes';
 
 const INVOICE = '0123456789abcdef0123456789abcdef';
@@ -20,5 +20,14 @@ describe('path-style links on a static host', () => {
     expect(canonicalRoute('/nope', '')).toBeNull();
     expect(canonicalRoute('/pay/not-an-invoice', '')).toBeNull();
     expect(canonicalRoute('/a/b/c/d', '')).toBeNull();
+  });
+
+  it('forwards links that arrive with a base path', async () => {
+    vi.stubEnv('NEXT_PUBLIC_BASE_PATH', '/obiba_frontend');
+    vi.resetModules();
+    const based = await import('@/lib/routes');
+    expect(based.canonicalRoute(`/obiba_frontend/pay/${INVOICE}`, '')).toBe(based.routes.invoice(INVOICE));
+    expect(based.canonicalRoute('/obiba_frontend/nope', '')).toBeNull();
+    vi.unstubAllEnvs();
   });
 });

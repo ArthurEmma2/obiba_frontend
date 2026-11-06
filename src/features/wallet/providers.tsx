@@ -1,3 +1,5 @@
+import { withBase } from '@/lib/base-path';
+
 export interface ProviderInfo {
   name: string;
   wallet?: string;
@@ -5,11 +7,11 @@ export interface ProviderInfo {
 }
 
 export const PROVIDERS: Record<string, ProviderInfo> = {
-  MTN: { name: 'MTN', wallet: 'MTN MoMo', logo: '/logos/providers/mtn.png' },
-  TELECEL: { name: 'Telecel', wallet: 'Telecel Cash', logo: '/logos/providers/telecel.png' },
+  MTN: { name: 'MTN', wallet: 'MTN MoMo', logo: withBase('/logos/providers/mtn.png') },
+  TELECEL: { name: 'Telecel', wallet: 'Telecel Cash', logo: withBase('/logos/providers/telecel.png') },
   AT: { name: 'AT', wallet: 'AT Money' },
-  ECG: { name: 'ECG', logo: '/logos/providers/ecg.png' },
-  GWL: { name: 'Ghana Water', logo: '/logos/providers/gwl.png' },
+  ECG: { name: 'ECG', logo: withBase('/logos/providers/ecg.png') },
+  GWL: { name: 'Ghana Water', logo: withBase('/logos/providers/gwl.png') },
   DSTV: { name: 'DStv' },
   GOTV: { name: 'GOtv' },
   GCB: { name: 'GCB Bank' },
@@ -65,18 +67,18 @@ export function ProviderLogos({ ids, size = 29 }: { ids: string[]; size?: number
 }
 
 const NETWORKS: Record<string, { name: string; logo: string }> = {
-  near: { name: 'NEAR', logo: '/logos/networks/near.svg' },
-  tron: { name: 'Tron', logo: '/logos/networks/tron.svg' },
-  bsc: { name: 'BNB Chain', logo: '/logos/networks/bnb.svg' },
-  base: { name: 'Base', logo: '/logos/networks/base.svg' },
-  arbitrum: { name: 'Arbitrum', logo: '/logos/networks/arbitrum.svg' },
-  solana: { name: 'Solana', logo: '/logos/networks/solana.svg' },
+  near: { name: 'NEAR', logo: withBase('/logos/networks/near.svg') },
+  tron: { name: 'Tron', logo: withBase('/logos/networks/tron.svg') },
+  bsc: { name: 'BNB Chain', logo: withBase('/logos/networks/bnb.svg') },
+  base: { name: 'Base', logo: withBase('/logos/networks/base.svg') },
+  arbitrum: { name: 'Arbitrum', logo: withBase('/logos/networks/arbitrum.svg') },
+  solana: { name: 'Solana', logo: withBase('/logos/networks/solana.svg') },
 };
 
 const TOKENS: Record<string, { name: string; logo: string }> = {
-  USDC: { name: 'USDC', logo: '/logos/tokens/usdc.svg' },
-  USDT: { name: 'USDT', logo: '/logos/tokens/usdt.svg' },
-  SOL: { name: 'SOL', logo: '/logos/tokens/sol.svg' },
+  USDC: { name: 'USDC', logo: withBase('/logos/tokens/usdc.svg') },
+  USDT: { name: 'USDT', logo: withBase('/logos/tokens/usdt.svg') },
+  SOL: { name: 'SOL', logo: withBase('/logos/tokens/sol.svg') },
 };
 
 export function networkOf(label: string): string | null {
@@ -137,7 +139,7 @@ export function NetworkRow({ networks, size = 18 }: { networks: string[]; size?:
   );
 }
 
-const FLAGS: Record<string, string> = { GH: '/logos/flags/gh-1x1.svg', KE: '/logos/flags/ke-1x1.svg', NG: '/logos/flags/ng-1x1.svg', ZA: '/logos/flags/za-1x1.svg' };
+const FLAGS: Record<string, string> = { GH: withBase('/logos/flags/gh-1x1.svg'), KE: withBase('/logos/flags/ke-1x1.svg'), NG: withBase('/logos/flags/ng-1x1.svg'), ZA: withBase('/logos/flags/za-1x1.svg') };
 
 export function Flag({ country, size = 28 }: { country: string; size?: number }) {
   const src = FLAGS[country.toUpperCase()];

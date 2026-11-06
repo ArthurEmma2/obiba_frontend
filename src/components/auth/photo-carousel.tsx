@@ -1,5 +1,6 @@
 'use client';
 
+import { withBase } from '@/lib/base-path';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { t } from '@/lib/strings';
 import { useReducedMotion } from '@/lib/use-reduced-motion';
@@ -66,7 +67,7 @@ export function PhotoCarousel({ start = 0 }: { start?: number }) {
             style={{ opacity: active ? 1 : 0, transitionDuration: `${FADE_MS}ms`, zIndex: active ? 2 : 1 }}
           >
             <img
-              src={`/photos/${s.id}.webp`}
+              src={withBase(`/photos/${s.id}.webp`)}
               alt=""
               draggable={false}
               decoding="async"

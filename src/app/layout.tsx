@@ -1,3 +1,4 @@
+import { withBase } from '@/lib/base-path';
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
   applicationName: 'Obiba',
   appleWebApp: { capable: true, title: 'Obiba', statusBarStyle: 'default' },
   formatDetection: { telephone: false, email: false, address: false },
-  icons: { icon: '/brand/favicon.png', apple: '/brand/apple-touch-icon.png' },
+  icons: { icon: withBase('/brand/favicon.png'), apple: withBase('/brand/apple-touch-icon.png') },
   robots: { index: false, follow: false },
   referrer: 'no-referrer',
 };

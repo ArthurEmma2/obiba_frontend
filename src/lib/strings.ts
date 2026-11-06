@@ -1,4 +1,5 @@
 export const t = {
+  uiPreview: 'This is a design preview. Sign-in and sign-up are turned off here.',
   notFound: { title: 'We could not find that page', home: 'Go to Obiba' },
   brand: {
     name: 'Obiba',
