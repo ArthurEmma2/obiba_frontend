@@ -1,6 +1,6 @@
 # Obiba web
 
-The Obiba wallet frontend, a Next.js static export hosted on GitHub Pages at https://obiba.kwespay.me.
+The Obiba wallet frontend, a Next.js static export hosted on GitHub Pages at https://app.obibajk.com.
 
 ```bash
 pnpm install
