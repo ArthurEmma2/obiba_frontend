@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { webConfig } from '@/lib/config';
 import type { AuthUser } from '@/lib/auth/types';
 import { DeviceKeyError } from '@/lib/crypto/device-key';
 import { isApiError } from '@/lib/errors';
@@ -23,18 +24,19 @@ export async function loadLocalKey(services: Services, uid: string): Promise<Loc
 }
 
 export async function loadFacts(services: Services, user: AuthUser): Promise<OnboardingFacts> {
+  const { skipOtp } = webConfig();
   const facts: OnboardingFacts = {
-    emailVerified: user.emailVerified,
+    emailVerified: user.emailVerified || skipOtp,
     me: null,
     devices: [],
     recoveryKit: null,
     recovery: null,
     supportCase: null,
     localKey: { state: 'unknown' },
-    secondFactorEnrolled: services.auth.secondFactorEnrolled(),
+    secondFactorEnrolled: services.auth.secondFactorEnrolled() || skipOtp,
     removedHere: false,
   };
-  if (!user.emailVerified) return facts;
+  if (!facts.emailVerified) return facts;
   try {
     facts.me = (await services.api.request('Me')).me;
   } catch (err) {

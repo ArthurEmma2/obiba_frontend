@@ -97,6 +97,22 @@ describe('sign up', () => {
     await waitFor(() => expect(testRouter().replace).toHaveBeenCalledWith('/onboarding'));
   });
 
+  it('does not reject a strong password on the result for the shorter text typed before it', async () => {
+    const auth = signedOut();
+    renderWith(<SignUpForm />, makeServices({ auth }));
+    await fill();
+    await screen.findByText(/At least 10 characters/);
+    await waitFor(() => expect(auth.checkPassword).toHaveBeenCalledWith('a-long-passphrase'));
+    const field = screen.getByLabelText(t.common.password);
+    await userEvent.clear(field);
+    await userEvent.type(field, 'short');
+    await waitFor(() => expect(auth.checkPassword).toHaveBeenCalledWith('short'));
+    await screen.findByText(t.password.strength[0]);
+    await userEvent.type(field, '-now-long-enough');
+    await userEvent.click(screen.getByRole('button', { name: t.signUp.submit }));
+    await waitFor(() => expect(auth.signUp).toHaveBeenCalledWith({ email: 'ama@example.com', password: 'short-now-long-enough', displayName: 'Ama Owusu' }));
+  });
+
   it('does not reveal that an email is already registered', async () => {
     const auth = signedOut();
     vi.mocked(auth.signUp).mockRejectedValueOnce(Object.assign(new Error('x'), { code: 'auth/email-already-in-use' }));

@@ -118,7 +118,7 @@ function ResetForm({ code, email, onDone, onLinkError }: { code: string; email: 
     e.preventDefault();
     if (busy) return;
     if (!password) return setError(t.validation.passwordRequired);
-    if (policy.check && !policy.check.valid) return setError(t.errors.authWeakPassword);
+    if (policy.current && !policy.current.valid) return setError(t.errors.authWeakPassword);
     setError(null);
     setBusy(true);
     try {

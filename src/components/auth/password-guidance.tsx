@@ -35,14 +35,14 @@ export function estimateStrength(password: string): 0 | 1 | 2 | 3 {
   return Math.max(0, Math.min(3, score)) as 0 | 1 | 2 | 3;
 }
 
-export function usePasswordCheck(password: string): { check: PasswordCheck | null; unavailable: boolean } {
+export function usePasswordCheck(password: string): { check: PasswordCheck | null; current: PasswordCheck | null; unavailable: boolean } {
   const { auth } = useServices();
-  const [state, setState] = useState<{ check: PasswordCheck | null; unavailable: boolean }>({ check: null, unavailable: false });
+  const [state, setState] = useState<{ password: string; check: PasswordCheck | null; unavailable: boolean }>({ password: '', check: null, unavailable: false });
   useEffect(() => {
     let alive = true;
     const id = setTimeout(() => {
       void auth.checkPassword(password).then((check) => {
-        if (alive) setState({ check, unavailable: check === null });
+        if (alive) setState({ password, check, unavailable: check === null });
       });
     }, 200);
     return () => {
@@ -50,7 +50,8 @@ export function usePasswordCheck(password: string): { check: PasswordCheck | nul
       clearTimeout(id);
     };
   }, [auth, password]);
-  return state;
+  // `check` keeps the last result so the rules do not flicker while typing; only `current` describes this password.
+  return { check: state.check, current: state.password === password ? state.check : null, unavailable: state.unavailable };
 }
 
 export function PasswordGuidance({ password, id, check, unavailable }: { password: string; id: string; check: PasswordCheck | null; unavailable: boolean }) {

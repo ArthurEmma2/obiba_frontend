@@ -44,7 +44,7 @@ export function SignUpForm() {
     if (!email.trim()) next.email = t.validation.emailRequired;
     else if (!validEmail(email)) next.email = t.validation.emailInvalid;
     if (!password) next.password = t.validation.passwordRequired;
-    else if (policy.check && !policy.check.valid) next.password = t.errors.authWeakPassword;
+    else if (policy.current && !policy.current.valid) next.password = t.errors.authWeakPassword;
     return next;
   }
 

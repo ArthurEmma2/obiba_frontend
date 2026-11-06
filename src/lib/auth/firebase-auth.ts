@@ -182,7 +182,7 @@ export function createFirebaseAuthService(): AuthService {
       await withRecaptcha();
       const cred = await createUserWithEmailAndPassword(instance(), email, password);
       await updateProfile(cred.user, { displayName });
-      await sendEmailVerification(cred.user, { url: continueUrl() });
+      if (!webConfig().skipOtp) await sendEmailVerification(cred.user, { url: continueUrl() });
     },
 
     async signIn(email, password) {
