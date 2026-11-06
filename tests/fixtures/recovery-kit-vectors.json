@@ -1,0 +1,79 @@
+{
+  "spec": "obiba-recovery-kit-v1",
+  "rules": [
+    "seed = 32 random bytes; it is the Ed25519 private key seed (RFC 8032) and the BIP-39 entropy",
+    "words = BIP-39 English entropyToMnemonic(seed): 24 words, last word carries the 8-bit SHA-256 checksum",
+    "restore = normalize (NFKD, trim, lowercase, single spaces), require exactly 24 words, mnemonicToEntropy, require 32 bytes",
+    "never use mnemonicToSeed, PBKDF2, a passphrase or HD/SLIP-10 derivation; wrongKeyFromStandardWalletDerivation must never be produced",
+    "publicKey = ed25519:<base58 of the 32-byte public key>",
+    "signatures = Ed25519 over the exact message bytes, base64"
+  ],
+  "context": {
+    "networkId": "mainnet",
+    "accountId": "ama.obiba.near",
+    "newDevicePublicKey": "ed25519:2zf7NMtPaGuGRfMYrchRxEqkhq64dCoTERKQx5eFAjqR",
+    "guardianNonce": "7"
+  },
+  "vectors": [
+    {
+      "seedHex": "0000000000000000000000000000000000000000000000000000000000000000",
+      "words": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon art",
+      "publicKey": "ed25519:4zvwRjXUKGfvwnParsHAS3HuSVzV5cA4McphgmoCtajS",
+      "registrationMessageBase64": "b2JpYmE6cmVjb3Zlcnkta2l0OnYxOm1haW5uZXQ6YW1hLm9iaWJhLm5lYXI6ZWQyNTUxOTo0enZ3UmpYVUtHZnZ3blBhcnNIQVMzSHVTVnpWNWNBNE1jcGhnbW9DdGFqUw==",
+      "registrationSignature": "8gKSPjfOSZhHYV9g2YEQnqtHVmk96cZs9efwtFQYZ3yhghRLDj7WiLR+1kEKEyUu5zQuplDNgPuHELcneybpAQ==",
+      "challengeMessageBase64": "b2JpYmE6cmVjb3Zlcnk6djE6bWFpbm5ldDphbWEub2JpYmEubmVhcjplZDI1NTE5OjJ6ZjdOTXRQYUd1R1JmTVlyY2hSeEVxa2hxNjRkQ29URVJLUXg1ZUZBanFSOjc=",
+      "challengeSignature": "orAW8SoqjlIxKX2E2gwJYRnZBc4lneB8Pd5pyXdP14yWyicGTwfzTBggYX66MfEjvB7w7j4EnH2AM/aAXcLeAQ==",
+      "wrongKeyFromStandardWalletDerivation": "ed25519:31fsSBAugfgtWp4WZLgr1D9TBkgiS13d5eK3GWBQwRct"
+    },
+    {
+      "seedHex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "words": "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo vote",
+      "publicKey": "ed25519:8z5oiZDBaCrP7ZCP1vQZbxkUt2eevdpPnyvpQAvAYuiL",
+      "registrationMessageBase64": "b2JpYmE6cmVjb3Zlcnkta2l0OnYxOm1haW5uZXQ6YW1hLm9iaWJhLm5lYXI6ZWQyNTUxOTo4ejVvaVpEQmFDclA3WkNQMXZRWmJ4a1V0MmVldmRwUG55dnBRQXZBWXVpTA==",
+      "registrationSignature": "PvnRF58OzduaUWZxi2huzBlEEGIYbBug5c5E0x5RgBRWUXwLqWT10YZuA7sTYXDPQ5jEYqDBwgm/aR08h3+JAg==",
+      "challengeMessageBase64": "b2JpYmE6cmVjb3Zlcnk6djE6bWFpbm5ldDphbWEub2JpYmEubmVhcjplZDI1NTE5OjJ6ZjdOTXRQYUd1R1JmTVlyY2hSeEVxa2hxNjRkQ29URVJLUXg1ZUZBanFSOjc=",
+      "challengeSignature": "k2z0Ap0tqis6qURDSSSQy1iaI0PHTVkzJN5ol2oaWf3PfmTYj4NM9bMkqy4F2SBD6bOe0Ufnl8HC3I+C4PWyAg==",
+      "wrongKeyFromStandardWalletDerivation": "ed25519:GksbeTgVcyVZ753NzR5Lnwiu7BcfDzU5mSiR1DSF3VLz"
+    },
+    {
+      "seedHex": "8080808080808080808080808080808080808080808080808080808080808080",
+      "words": "letter advice cage absurd amount doctor acoustic avoid letter advice cage absurd amount doctor acoustic avoid letter advice cage absurd amount doctor acoustic bless",
+      "publicKey": "ed25519:GSWmWFSy27pcZDVH9NA52BFapq8DUwTyuzT8JsrhctL1",
+      "registrationMessageBase64": "b2JpYmE6cmVjb3Zlcnkta2l0OnYxOm1haW5uZXQ6YW1hLm9iaWJhLm5lYXI6ZWQyNTUxOTpHU1dtV0ZTeTI3cGNaRFZIOU5BNTJCRmFwcThEVXdUeXV6VDhKc3JoY3RMMQ==",
+      "registrationSignature": "Cp7jLw0iEITmElVdt5HbSfoA/WIdEF85qOkeay8PSB7AuXHpBrHkzNBwdILR74D67lKZQwj+S7j3JhznweaRCA==",
+      "challengeMessageBase64": "b2JpYmE6cmVjb3Zlcnk6djE6bWFpbm5ldDphbWEub2JpYmEubmVhcjplZDI1NTE5OjJ6ZjdOTXRQYUd1R1JmTVlyY2hSeEVxa2hxNjRkQ29URVJLUXg1ZUZBanFSOjc=",
+      "challengeSignature": "wdfDAHTBdMr3tX/Uw2xrkg8lb/cTIJyQZfKgV2u8t0O/FKsaOmt+4UUxNb1lng1iZiVG5u4LaXLAtJDAoXVFDw==",
+      "wrongKeyFromStandardWalletDerivation": "ed25519:GepuXK3ENenAXCcXiNibf82GUox2yPtHUJ4qF37J8dCW"
+    },
+    {
+      "seedHex": "6f102496dabd580227bfee985e155a9d50d4e62a727ea7ca60ffa0d8e7205a9f",
+      "words": "humor license certain rely stereo absurd page worry obscure vague find deny ask indoor prefer exist pond fantasy divide double mobile mother heavy vacant",
+      "publicKey": "ed25519:HrGV14k2fp4oJpJ6qW9A9QBmYfTDX513u68vEEFVp3Gf",
+      "registrationMessageBase64": "b2JpYmE6cmVjb3Zlcnkta2l0OnYxOm1haW5uZXQ6YW1hLm9iaWJhLm5lYXI6ZWQyNTUxOTpIckdWMTRrMmZwNG9KcEo2cVc5QTlRQm1ZZlREWDUxM3U2OHZFRUZWcDNHZg==",
+      "registrationSignature": "063rS499sQD/XyujKJlxJ1SXc8NaV288DCvDtsV1b6xDkWUbiMgHFLgdgvrkxDPHjR22N6p17uYhZ682pZo+BQ==",
+      "challengeMessageBase64": "b2JpYmE6cmVjb3Zlcnk6djE6bWFpbm5ldDphbWEub2JpYmEubmVhcjplZDI1NTE5OjJ6ZjdOTXRQYUd1R1JmTVlyY2hSeEVxa2hxNjRkQ29URVJLUXg1ZUZBanFSOjc=",
+      "challengeSignature": "9jdpq7u2huXzVewObrSSP834QLs895GBBJgfSDJn6yD+scXZdTTwyW815efk+Jb0n37gf16SYIh7uab+vHsHBA==",
+      "wrongKeyFromStandardWalletDerivation": "ed25519:9zTEPYEyCh7dAwxXfMeFqc5s4mrfQA9LQAqiQwAH2rEt"
+    },
+    {
+      "seedHex": "b8dc0ed5609d99b6d1ba604c4d11b339f9926b072c0f7b86cb3beccbda659c1d",
+      "words": "rhythm there relief scorpion sunset swarm eight equal era hammer holiday initial odor culture bronze limit knee curve solve sunset sad crazy idea pass",
+      "publicKey": "ed25519:AaFmhPS5jsBaLovx9duWF4cho27y8AZqJijRE9D4Z1dB",
+      "registrationMessageBase64": "b2JpYmE6cmVjb3Zlcnkta2l0OnYxOm1haW5uZXQ6YW1hLm9iaWJhLm5lYXI6ZWQyNTUxOTpBYUZtaFBTNWpzQmFMb3Z4OWR1V0Y0Y2hvMjd5OEFacUppalJFOUQ0WjFkQg==",
+      "registrationSignature": "TUqvkbYGb7dL5sVtVM5IbGNmUyKDQYHyxZCcX9eZN3JlpKqIVXGTB2OMNMiZZCpMdQWchTDnTFcuRIA8twf3AA==",
+      "challengeMessageBase64": "b2JpYmE6cmVjb3Zlcnk6djE6bWFpbm5ldDphbWEub2JpYmEubmVhcjplZDI1NTE5OjJ6ZjdOTXRQYUd1R1JmTVlyY2hSeEVxa2hxNjRkQ29URVJLUXg1ZUZBanFSOjc=",
+      "challengeSignature": "RkJ8JaMEH/aMwRBA8sGv54mqfDUmv6J5ZuL4bV28MbhYJXYaPcHpWSEKXDihPBPUyaiq6MsELZMjxOk9qx5oAQ==",
+      "wrongKeyFromStandardWalletDerivation": "ed25519:9MQ8f6S81c6rjMeh6j675QymiFcARwRh27rXLmvKBAAa"
+    },
+    {
+      "seedHex": "6b6c149f0a87cbc48247691e909a65ca861e42e698fc4c9b692facd83f6939fe",
+      "words": "hidden gaze chief bench lake time animal unfold burden luggage offer never giggle cannon omit buzz erode swap episode fluid loop region tree sleep",
+      "publicKey": "ed25519:Ajsg4MU2KtjjqQS8r7gQ1XKhFVdrhqUB1FTJ4eL6ZbDp",
+      "registrationMessageBase64": "b2JpYmE6cmVjb3Zlcnkta2l0OnYxOm1haW5uZXQ6YW1hLm9iaWJhLm5lYXI6ZWQyNTUxOTpBanNnNE1VMkt0ampxUVM4cjdnUTFYS2hGVmRyaHFVQjFGVEo0ZUw2WmJEcA==",
+      "registrationSignature": "W7UPD7MYKovTz3ECvJS/8GHfxq6SZByt46xhyVqqTeg06a6y0tjGl5HFumJMQNahomaGWHybS2wm++MhOE49Bg==",
+      "challengeMessageBase64": "b2JpYmE6cmVjb3Zlcnk6djE6bWFpbm5ldDphbWEub2JpYmEubmVhcjplZDI1NTE5OjJ6ZjdOTXRQYUd1R1JmTVlyY2hSeEVxa2hxNjRkQ29URVJLUXg1ZUZBanFSOjc=",
+      "challengeSignature": "W7kLsf6KFS/Z8+FnpQ9BC1WbHrHW6hrEhBo6HhKop4CbZ7QwFOhfL5uHzJf0dMe6iqdahVX5R6AZj3gkwH1TCQ==",
+      "wrongKeyFromStandardWalletDerivation": "ed25519:Ew9EfcHy6qPZoYarbEWfXxyPpGd3Z9UPoopaJ8a4VMJY"
+    }
+  ]
+}

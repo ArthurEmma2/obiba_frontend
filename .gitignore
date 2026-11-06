@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+coverage/
+.env
+.env.*
+!.env.example
+!.env.production
+*.log
+.DS_Store
+next-env.d.ts
+*.tsbuildinfo
+test-results/
+playwright-report/
+persisted-operations.json
