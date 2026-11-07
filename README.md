@@ -13,6 +13,7 @@ Pushes to `main` build, test and deploy through `.github/workflows/deploy.yml`. 
 
 ## Static hosting
 
+- Pages export as directories (`/sign-in/index.html`) so direct links and refreshes work on GitHub Pages. Production uses the custom-domain root; keep `NEXT_PUBLIC_BASE_PATH` and `NEXT_PUBLIC_UI_PREVIEW` unset in `.env.production`.
 - **Record pages take their ID as a query parameter**, for example `/activity/detail?id=...`. Build links with `src/lib/routes.ts`.
 - **Path-style links keep working.** The API issues `/pay/<id>` payment links; `src/app/not-found.tsx` forwards those from the `404.html` page.
 - **The CSP is a per-page meta tag.** `scripts/finalize-static.mjs` pins each page's inline scripts by hash after the build.

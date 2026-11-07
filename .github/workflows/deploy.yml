@@ -29,6 +29,16 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
+      - name: Verify Pages routes
+        run: |
+          test -f out/index.html
+          test -f out/404.html
+          test -f out/sign-in/index.html
+          test -f out/sign-up/index.html
+          if grep -q '/obiba_frontend/' out/sign-in/index.html; then
+            echo 'The custom-domain build must use root-relative assets.'
+            exit 1
+          fi
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: out

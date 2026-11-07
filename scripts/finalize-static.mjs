@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { copyFileSync, existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -64,9 +64,4 @@ for (const page of pages) {
   writeFileSync(page, html.replace('<head>', `<head>${meta}`));
 }
 
-// /pay.html next to a /pay/ folder: some static hosts answer /pay with the folder, so give the folder the same page.
-for (const page of pages) {
-  const folder = page.slice(0, -'.html'.length);
-  if (existsSync(folder) && statSync(folder).isDirectory()) copyFileSync(page, join(folder, 'index.html'));
-}
 process.stdout.write(`Pinned inline scripts in ${pages.length} pages\n`);
