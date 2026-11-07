@@ -49,8 +49,9 @@ export function useStepUp(): { run: <T>(action: () => Promise<T>, opts?: { requi
             }
             resolve(await action());
           } catch (err) {
-            if (isApiError(err, 'STEP_UP_REQUIRED') && !pendingRef.current) {
+            if (isApiError(err, 'STEP_UP_REQUIRED') && !pendingRef.current && !reauthed) {
               open({ retry: () => void attempt(), cancel: () => reject(new StepUpCancelled()) });
+              reauthed = true;
               return;
             }
             reject(err);

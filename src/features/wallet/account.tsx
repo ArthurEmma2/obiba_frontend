@@ -637,7 +637,6 @@ export function Settings() {
                   <>
                     <p className="text-[15px] font-semibold text-ink">{t.accountPage.removeOnlyTitle}</p>
                     <p className="mt-2 max-w-[36rem]">{t.accountPage.removeOnlyBody}</p>
-                    <p className="mt-2 max-w-[36rem] text-muted">{t.accountPage.removeSharedTip}</p>
                   </>
                 ) : (
                   <p className="max-w-[36rem]">{t.accountPage.removeUnavailable}</p>

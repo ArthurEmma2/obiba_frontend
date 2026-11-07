@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useRef, useState, type FormEvent } from 'react';
 import { Button, TextButton } from '@/components/ui/button';
-import { Checkbox, Field, Input, PasswordInput } from '@/components/ui/field';
+import { Field, Input, PasswordInput } from '@/components/ui/field';
 import { Notice } from '@/components/ui/notice';
 import type { SecondFactorChallenge } from '@/lib/auth/types';
 import { authErrorCode, messageFor } from '@/lib/errors';
@@ -18,9 +18,8 @@ import { rememberRestoreEmail } from '@/features/recover/storage';
 import { useSignedInRedirect } from './use-signed-in-redirect';
 
 export function SignInForm() {
-  const { auth, api } = useServices();
+  const { auth } = useServices();
   const router = useRouter();
-  const [shared, setShared] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -35,18 +34,7 @@ export function SignInForm() {
   async function finish(): Promise<void> {
     const wanted = new URLSearchParams(window.location.search).get('next');
     const next = wanted && /^\/pay\/invoice\?id=[0-9a-f]{32}$/.test(wanted) ? wanted : null;
-    if (!shared) {
-      router.replace(next ?? '/onboarding');
-      return;
-    }
-    try {
-      await api.request('BeginViewOnlySession');
-      router.replace(next ?? '/home');
-    } catch {
-      await auth.signOut().catch(() => undefined);
-      setChallenge(null);
-      setFormError(t.signIn.sharedFailed);
-    }
+    router.replace(next ?? '/onboarding');
   }
 
   async function submitCredentials(e: FormEvent) {
@@ -62,7 +50,6 @@ export function SignInForm() {
     inFlight.current = true;
     setBusy(true);
     try {
-      await auth.setSharedComputer(shared);
       const result = await auth.signIn(email.trim(), password);
       if (result.status === 'second-factor') {
         setChallenge(result.challenge);
@@ -174,10 +161,7 @@ export function SignInForm() {
       <GoogleButton
         disabled={busy}
         onStart={() => setBusy(true)}
-        run={async () => {
-          await auth.setSharedComputer(shared);
-          return auth.signInWithGoogle();
-        }}
+        run={() => auth.signInWithGoogle()}
         onResult={(r) => {
           if (r.status === 'second-factor') {
             setBusy(false);
@@ -231,14 +215,6 @@ export function SignInForm() {
             />
           )}
         </Field>
-        <div className="flex flex-col gap-1.5">
-          <Checkbox checked={shared} onChange={setShared} describedBy="shared-hint">
-            {t.signIn.shared}
-          </Checkbox>
-          <p id="shared-hint" className="pl-8 text-[13px] leading-5 text-muted">
-            {t.signIn.sharedHint}
-          </p>
-        </div>
         <Button type="submit" block loading={busy} loadingLabel={t.common.working} className="mt-1">
           {t.signIn.submit}
         </Button>

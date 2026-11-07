@@ -59,7 +59,7 @@ export function DeviceStep({
   moving?: RecoveryView | null;
   support?: SupportCaseView | null;
 }) {
-  const { api, device, platform, supportEmail } = useServices();
+  const { api, auth, device, platform, supportEmail } = useServices();
   const [view, setView] = useState<View>(() => initialView(localKey, devices, platform.isIos() && !platform.isStandalone(), moving, support));
   const [movingBusy, setMovingBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -224,9 +224,10 @@ export function DeviceStep({
   }
 
   if (view.kind === 'unlinked') {
+    const canMove = auth.secondFactorEnrolled();
     return (
       <div className="max-w-[36rem]">
-        <StepHeader step="device" title={removedHere ? t.device.removedTitle : t.device.unlinkedTitle} lead={t.device.unlinked} />
+        <StepHeader step="device" title={removedHere ? t.device.removedTitle : t.device.unlinkedTitle} lead={canMove ? t.device.unlinked : t.device.unlinkedNoFactor} />
         <div className="stagger flex flex-col gap-6">
           {error ? (
             <Notice tone="danger" live="assertive">
@@ -236,15 +237,19 @@ export function DeviceStep({
           {stepUp.panel}
           {!stepUp.active ? (
             <Actions>
-              <Button onClick={() => void move()} loading={movingBusy} loadingLabel={t.common.working}>
-                {t.device.move}
-              </Button>
+              {canMove ? (
+                <Button onClick={() => void move()} loading={movingBusy} loadingLabel={t.common.working}>
+                  {t.device.move}
+                </Button>
+              ) : (
+                <Button onClick={() => (setError(null), setView({ kind: 'ask-support' }))}>{t.device.askSupportMove}</Button>
+              )}
               <Button variant="secondary" onClick={onSignOut} disabled={movingBusy}>
                 {t.common.signOut}
               </Button>
             </Actions>
           ) : null}
-          {!stepUp.active ? (
+          {!stepUp.active && canMove ? (
             <TextButton onClick={() => (setError(null), setView({ kind: 'ask-support' }))} className="self-start">
               {t.restore.askSupport}
             </TextButton>

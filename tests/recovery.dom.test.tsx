@@ -1,7 +1,8 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { OnboardingFlow } from '@/features/onboarding/onboarding-flow';
+import { ApiError } from '@/lib/graphql/client';
 import { t } from '@/lib/strings';
 import { ME, fakeApi, fakeAuth, fakeDevice, makeServices, renderWith } from './helpers';
 
@@ -41,3 +42,43 @@ describe('moving an account to a new browser after losing the old one', () => {
     expect(await screen.findByRole('heading', { name: t.phoneVerify.title })).toBeInTheDocument();
   });
 });
+
+describe('confirming before a move', () => {
+  it('shows why instead of asking again when the confirmation is not enough', async () => {
+    const start = vi.fn(async () => {
+      throw new ApiError('STEP_UP_REQUIRED');
+    });
+    const auth = fakeAuth({ secondFactorEnrolled: () => true });
+    renderWith(<OnboardingFlow />, makeServices({ auth, api: api(null, start), device: fakeDevice() }));
+    await userEvent.click(await screen.findByRole('button', { name: t.device.move }));
+    await userEvent.type(await screen.findByLabelText(t.common.password), 'correct horse');
+    await userEvent.click(screen.getByRole('button', { name: t.reauth.submit }));
+    await waitFor(() => expect(start).toHaveBeenCalledTimes(2));
+    expect(await screen.findByText((text) => text.startsWith(t.device.moveFailed))).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: t.reauth.title })).toBeNull();
+    expect(auth.reauthenticate).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('an account secured elsewhere with no phone or authenticator', () => {
+  beforeEach(() => {
+    vi.stubEnv('NEXT_PUBLIC_NEAR_NETWORK', 'testnet');
+    vi.stubEnv('NEXT_PUBLIC_ACCOUNT_SUFFIX', '.obiba.testnet');
+    vi.stubEnv('NEXT_PUBLIC_SKIP_OTP', '1');
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('offers support instead of a move it cannot complete', async () => {
+    vi.resetModules();
+    const [{ OnboardingFlow: Flow }, h, { t: s }] = await Promise.all([import('@/features/onboarding/onboarding-flow'), import('./helpers'), import('@/lib/strings')]);
+    h.renderWith(<Flow />, h.makeServices({ auth: h.fakeAuth(), api: api(null) }));
+    expect(await screen.findByText(s.device.unlinkedNoFactor)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: s.device.move })).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: s.device.askSupportMove }));
+    expect(await screen.findByRole('heading', { name: s.restore.supportTitle })).toBeInTheDocument();
+  });
+});
+

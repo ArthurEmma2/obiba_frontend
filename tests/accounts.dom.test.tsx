@@ -172,53 +172,18 @@ describe('remove this browser', () => {
   });
 });
 
-describe('signing in on a shared computer', () => {
+describe('signing in', () => {
   const signedOut = () => fakeAuth({ current: () => null, ready: async () => null });
 
-  async function signIn(shared: boolean) {
-    await userEvent.type(screen.getByLabelText(t.common.email), 'a@example.com');
-    await userEvent.type(screen.getByLabelText(t.common.password), 'pw');
-    if (shared) await userEvent.click(screen.getByRole('checkbox', { name: t.signIn.shared }));
-    await userEvent.click(screen.getByRole('button', { name: t.signIn.submit }));
-  }
-
-  it('uses a tab-only session and locks it to view-only before showing the account', async () => {
-    const auth = signedOut();
-    const order: string[] = [];
-    vi.mocked(auth.setSharedComputer).mockImplementation(async (v) => void order.push(`shared:${v}`));
-    vi.mocked(auth.signIn).mockImplementation(async () => {
-      order.push('signIn');
-      return { status: 'signed-in' };
-    });
-    const api = fakeApi(async (name) => {
-      order.push(name);
-      return { beginViewOnlySession: true };
-    });
-    renderWith(<SignInForm />, makeServices({ auth, api }));
-    await signIn(true);
-    await waitFor(() => expect(testRouter().replace).toHaveBeenCalledWith('/home'));
-    expect(order).toEqual(['shared:true', 'signIn', 'BeginViewOnlySession']);
-  });
-
-  it('signs straight back out if view-only cannot be confirmed', async () => {
-    const auth = signedOut();
-    const api = fakeApi(async () => {
-      throw new ApiError('SERVICE_PAUSED');
-    });
-    renderWith(<SignInForm />, makeServices({ auth, api }));
-    await signIn(true);
-    expect(await screen.findByText(t.signIn.sharedFailed)).toBeInTheDocument();
-    expect(auth.signOut).toHaveBeenCalled();
-    expect(testRouter().replace).not.toHaveBeenCalled();
-  });
-
-  it('keeps normal sign-in persistent and full', async () => {
+  it('offers no shared-computer option and goes straight to onboarding', async () => {
     const auth = signedOut();
     const api = fakeApi(async () => ({}));
     renderWith(<SignInForm />, makeServices({ auth, api }));
-    await signIn(false);
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText(t.common.email), 'a@example.com');
+    await userEvent.type(screen.getByLabelText(t.common.password), 'pw');
+    await userEvent.click(screen.getByRole('button', { name: t.signIn.submit }));
     await waitFor(() => expect(testRouter().replace).toHaveBeenCalledWith('/onboarding'));
-    expect(auth.setSharedComputer).toHaveBeenCalledWith(false);
     expect(api.request).not.toHaveBeenCalled();
   });
 });

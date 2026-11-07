@@ -178,7 +178,6 @@ function Account() {
               <div className="flex max-w-[36rem] flex-col gap-3 text-[14px] leading-[1.55] text-ink-2">
                 <p className="text-[15px] font-semibold text-ink">{t.accountPage.removeOnlyTitle}</p>
                 <p>{t.accountPage.removeOnlyBody}</p>
-                <p className="text-muted">{t.accountPage.removeSharedTip}</p>
               </div>
             ) : (
               <p className="max-w-[36rem] text-[14px] leading-[1.55] text-ink-2">{t.accountPage.removeUnavailable}</p>
