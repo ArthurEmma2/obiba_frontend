@@ -6,11 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Notice } from '@/components/ui/notice';
 import { messageFor } from '@/lib/errors';
 import type { SpendingLimit } from '@/lib/graphql/types';
-import { CEDI, formatLocal, formatRate, formatUsd } from '@/lib/money';
+import { CEDI, formatLocal, formatUsd } from '@/lib/money';
 import { useServices } from '@/lib/services';
 import { t } from '@/lib/strings';
 import { EntryHeader, EntryRow, fromActivity, fromPending } from './entries';
-import { rateSourceName, rateTime } from './local';
 import { AddIcon, CashOutIcon, CheckIcon, ChevronIcon, CopyIcon, PayIcon, ReceiveIcon, SendIcon, WithdrawIcon } from './nav-icons';
 import { ProviderLogos } from './providers';
 import { TokenEnablePrompt } from './token-enable';
@@ -114,7 +113,6 @@ function Statement({ state }: { state: Extract<WalletState, { status: 'ready' }>
   const whole = ghsMissing || !shown ? usdWhole : shown.whole;
   const fraction = ghsMissing || !shown ? usdFrac : shown.fraction;
   const symbol = currency === 'GHS' && !ghsMissing ? CEDI : '$';
-  const asOf = rate ? rateTime(rate.asOf) : '';
 
   return (
     <section aria-labelledby="available-h" className="relative isolate overflow-hidden rounded-[16px] bg-statement px-6 pb-6 pt-6 text-white sm:px-9 sm:pb-8 sm:pt-8">
@@ -148,7 +146,7 @@ function Statement({ state }: { state: Extract<WalletState, { status: 'ready' }>
       </p>
 
       <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[14px] leading-5 text-white/75">
-        <span>{currency === 'GHS' ? (ghsMissing ? t.overview.ghsMissing : rate ? t.overview.ghsNote(formatRate(rate.rate), rateSourceName(rate.source), asOf) : '') : t.overview.usdcNote}</span>
+        {currency === 'GHS' ? ghsMissing ? <span>{t.overview.ghsMissing}</span> : null : <span>{t.overview.usdcNote}</span>}
         {wallet.me.accountId ? (
           <button
             type="button"

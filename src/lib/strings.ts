@@ -1111,7 +1111,6 @@ export const t = {
     show: 'Show balance in',
     availableUsdc: 'Available balance',
     usdcNote: 'USDC on NEAR, held in your own account',
-    ghsNote: (rate: string, source: string, time: string) => `Indicative at GH\u20b5 ${rate} per $1, ${source}, ${time}`,
     ghsMissing: 'The GH\u20b5 rate is unavailable right now. Your balance is shown in USDC.',
     held: (amount: string) => `${amount} held for payments in progress`,
     pendingCount: (n: number) => `${n} in progress`,
