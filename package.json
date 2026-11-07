@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
-    "build": "node scripts/persisted-operations.mjs && next build && node scripts/finalize-static.mjs",
+    "build": "node scripts/persisted-operations.mjs && next build && node scripts/auth-helper.mjs && node scripts/finalize-static.mjs",
     "start": "npx --yes serve@14 out -l 3000",
     "operations": "node scripts/persisted-operations.mjs",
     "typecheck": "tsc --noEmit",

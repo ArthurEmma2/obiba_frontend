@@ -35,6 +35,12 @@ jobs:
           test -f out/404.html
           test -f out/sign-in/index.html
           test -f out/sign-up/index.html
+          test -f out/__/auth/handler.html
+          test -f out/__/auth/iframe.html
+          if grep -q 'Content-Security-Policy' out/__/auth/handler.html; then
+            echo 'The sign-in helper must not carry the app CSP.'
+            exit 1
+          fi
           if grep -q '/obiba_frontend/' out/sign-in/index.html; then
             echo 'The custom-domain build must use root-relative assets.'
             exit 1

@@ -52,7 +52,8 @@ function files(dir) {
   });
 }
 
-const pages = files(out).filter((f) => f.endsWith('.html'));
+const helper = join(out, '__');
+const pages = files(out).filter((f) => f.endsWith('.html') && !f.startsWith(helper));
 for (const page of pages) {
   const html = readFileSync(page, 'utf8');
   const hashes = new Set();
